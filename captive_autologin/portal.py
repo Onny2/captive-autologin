@@ -137,6 +137,14 @@ def submit(session, page, form, pairs, method=None):
 
 # ------------------------------------------------------------------ captcha
 
+def _split_command(command):
+    """shlex for the platform; on Windows (non-POSIX mode) backslashes survive but quotes must be stripped."""
+    if SYSTEM != "Windows":
+        return shlex.split(command)
+    return [t[1:-1] if len(t) > 1 and t[0] == t[-1] and t[0] in "\"'" else t
+            for t in shlex.split(command, posix=False)]
+
+
 def _solve_captcha(cap, page, session, cfg, interactive):
     """Returns the answer/token, "" if solved manually in the browser, or None if unsolved."""
     image_b64 = ""
@@ -153,7 +161,7 @@ def _solve_captcha(cap, page, session, cfg, interactive):
                    "field": cap.field, "image_base64": image_b64,
                    "image_path": str(app_dir() / "captcha.img") if image_b64 else ""}
         try:
-            r = subprocess.run(shlex.split(command, posix=SYSTEM != "Windows"), input=json.dumps(payload),
+            r = subprocess.run(_split_command(command), input=json.dumps(payload),
                                capture_output=True, text=True, timeout=120)
         except (OSError, subprocess.SubprocessError) as e:
             log.error("captcha_command failed: %s", e)
