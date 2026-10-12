@@ -7,7 +7,7 @@ VERSION=$(python3 -c "import re;print(re.search(r'__version__ = \"(.+?)\"', open
 ARCH=$(uname -m)
 STAGE=$(mktemp -d)/captive-autologin
 
-pyinstaller --onefile --clean --noconfirm --name captive-autologin packaging/entry.py
+pyinstaller --onefile --clean --noconfirm --paths . --name captive-autologin packaging/entry.py
 mkdir -p "$STAGE" dist
 cp dist/captive-autologin "$STAGE/"
 
