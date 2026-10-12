@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "captive-autologin"
+dynamic = ["version"]
+description = "Generic captive portal auto-login: forms, CSRF tokens, terms checkboxes, captcha hooks. Standard library only."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+keywords = ["captive-portal", "wifi", "login", "automation"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: System :: Networking",
+]
+
+[project.scripts]
+captive-autologin = "captive_autologin.cli:main"
+
+[tool.setuptools]
+packages = ["captive_autologin"]
+
+[tool.setuptools.dynamic]
+version = { attr = "captive_autologin.__version__" }
